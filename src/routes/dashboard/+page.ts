@@ -7,7 +7,8 @@ export const load: PageLoad = async ({ parent }) => {
 
   let { data: transactions, error } = await supabase
     .from("transactions")
-    .select("*");
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (!transactions) {
     transactions = [];

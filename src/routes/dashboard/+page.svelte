@@ -1,6 +1,7 @@
 <script lang="ts">
   import Modal from "../../components/Modal.svelte";
   import TransactionForm from "../../components/TransactionForm.svelte";
+  import TransactionList from "../../components/TransactionList.svelte";
 
   function open() {
     modal.toggle = true
@@ -11,7 +12,7 @@
   }
 
   let { data } = $props();
-  let { user, transactions, income, expense, total } = $derived(data)
+  let { user, transactions, income, expense, total, supabase } = $derived(data)
   let modal = $state({
     title: "",
     toggle: false,
@@ -30,15 +31,9 @@
 
   <button class="p-2 bg-slate-500 text-white rounded" onclick={() => {open(); modal.title = "Add transaction";}}>Add transaction</button>
   
-  <div class="border-1">
-    {#if transactions}
-      {#each transactions as transaction (transaction.id)}
-        <p id={transaction.id}>{transaction.amount}</p>
-      {/each}
-    {/if}
-  </div>
+  <TransactionList {supabase} transactions={transactions} />
 </div>
 
 <Modal {modal}>
-  <TransactionForm />
+  <TransactionForm mode="Add" />
 </Modal>

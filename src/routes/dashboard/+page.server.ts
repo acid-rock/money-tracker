@@ -1,7 +1,8 @@
-import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import { NUMBER_OF_PROCESSORS } from "$env/static/private";
+import { redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-  default: async ({ request, locals: { session, supabase } }) => {
+  add: async ({ request, locals: { session, supabase } }) => {
     const data = await request.formData();
     const type = data.get("type") as string;
     const amount = Number(data.get("amount"));
@@ -12,12 +13,30 @@ export const actions: Actions = {
       .from("transactions")
       .insert([{ type, amount, description, owner_id }]);
 
-    if (error) {
-      console.error(error);
+    if (error)
       return {
         error: error.message,
       };
-    }
+
+    redirect(303, "/dashboard");
+  },
+
+  edit: async ({ request, locals: { supabase } }) => {
+    const data = await request.formData();
+    const type = data.get("type") as string;
+    const description = data.get("description") as string;
+    const amount = Number(data.get("amount"));
+    const id = Number(data.get("id"));
+
+    let { error } = await supabase
+      .from("transactions")
+      .update({ type, amount, description })
+      .eq("id", id);
+
+    if (error)
+      return {
+        error: error.message,
+      };
 
     redirect(303, "/dashboard");
   },
