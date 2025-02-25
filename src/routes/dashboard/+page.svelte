@@ -1,7 +1,7 @@
 <script lang="ts">
   import Modal from "../../components/Modal.svelte";
   import TransactionForm from "../../components/TransactionForm.svelte";
-  import TransactionList from "../../components/TransactionList.svelte";
+  import Transactions from "../../components/Transactions.svelte";
 
   function open() {
     modal.toggle = true
@@ -30,8 +30,8 @@
   </div>
 
   <button class="p-2 bg-slate-500 text-white rounded" onclick={() => {open(); modal.title = "Add transaction";}}>Add transaction</button>
-  
-  <TransactionList {supabase} transactions={transactions} />
+
+  <Transactions {supabase} transactions={transactions} />
 </div>
 
 <Modal {modal}>
