@@ -6,6 +6,7 @@
   let { supabase, transactions=[] } = $props()
 
   let month_index = $state(new Date().getMonth())
+  let current_year = $state(new Date().getFullYear())
   let index = $state(0)
   let modal = $state({
     title: "",
@@ -15,7 +16,9 @@
 
   let filtered = $derived.by(() => {
     let filtered_transactions = transactions.filter((transaction: any) => {
-      return new Date(transaction.created_at).getMonth() === month_index
+      let year_check = new Date(transaction.created_at).getFullYear() === current_year
+      let month_check = new Date(transaction.created_at).getMonth() === month_index
+      return year_check && month_check
     })
 
     return filtered_transactions
@@ -36,17 +39,23 @@
 
   function decrement() {
     month_index = ((month_index - 1 % months.length) + months.length) % months.length;
+    if (month_index === 11) {
+      current_year -= 1
+    }
   }
 
   function increment() {
     month_index = (month_index + 1) % months.length;
+    if (month_index === 0) {
+      current_year += 1
+    }
   }
 </script>
 
 <!-- Date Scroller -->
 <div class="flex justify-between items-center text-2xl w-full my-3">
   <button onclick={decrement}>&lt;</button>
-  <p>{months[month_index]}</p>
+  <p>{months[month_index]} {current_year}</p>
   <button onclick={increment}>&gt;</button>
 </div>
 

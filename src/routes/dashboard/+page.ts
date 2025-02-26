@@ -1,9 +1,19 @@
 import type { PageLoad } from "./$types";
 
+export type Account = {
+  income: number;
+  expense: number;
+  total: number;
+};
+
 export const load: PageLoad = async ({ parent }) => {
   const supabase = (await parent()).supabase;
-  let expense = 0;
-  let income = 0;
+
+  let account: Account = {
+    income: 0,
+    expense: 0,
+    total: 0,
+  };
 
   let { data: transactions, error } = await supabase
     .from("transactions")
@@ -20,13 +30,13 @@ export const load: PageLoad = async ({ parent }) => {
 
   transactions.forEach(({ amount, type }) => {
     if (type === "income") {
-      income += amount;
+      account.income += amount;
     } else if (type === "expense") {
-      expense += amount;
+      account.expense += amount;
     }
   });
 
-  let total = income - expense;
+  account.total = account.income - account.expense;
 
-  return { transactions, income, expense, total };
+  return { transactions, account };
 };
