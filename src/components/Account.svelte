@@ -1,15 +1,5 @@
 <script lang="ts">
-  import clsx from "clsx";
-
-  let form: HTMLFormElement | null = null;
   let { account } = $props()
-  let editing = $state(false)
-
-  function focusCheck() {
-    if (!form) return 
-
-    editing = form.contains(document.activeElement)
-  }
 </script>
 
 <div>
